@@ -1,0 +1,105 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct Node
+{
+    int data;
+    struct Node * next;
+}LinkNode, *Linklist;;
+
+
+Linklist CreateHead()
+{
+    Linklist head = (Linklist)malloc(sizeof(LinkNode));
+    head->next = NULL;
+    printf("头节点创建成功。\n");
+    return head;
+}
+
+Linklist CreateNode(int data)
+{
+    Linklist node=(Linklist)malloc(sizeof(LinkNode));
+    node->next = NULL;
+    node->data = data;
+}
+
+void InsertNode(Linklist head)
+{
+    int data;
+    Linklist node;
+    Linklist p,q;
+    p = head;
+    printf("请输入插入值（按回车输入下一个）(当输入ctrl+z表示停止输入）：");
+    while(scanf("%d",&data)!=EOF)
+    {
+        
+        node = CreateNode(data);
+        q = p->next;
+        p->next = node;
+        q = node;
+        p = q;
+        printf("%d\n",data);
+    }
+    printf("ok\n");
+}
+void delete(Linklist q)
+{
+    Linklist f = q->next;
+    q = f->next;
+    free(f);
+}
+void Print(Linklist head)
+{
+    Linklist p;
+    p = head->next;
+    printf("链表内容：");
+    while(p)
+    {
+        printf("%d\t",p->data);
+        p = p->next;
+    }
+    printf("\n");
+}
+
+Linklist line_max(Linklist L,Linklist T)
+{
+    Linklist Lc = L;
+    Linklist p,q;
+    p = L->next;
+    q = T->next;
+   
+    while(p && q)
+    {
+        if(p->data < q->data)
+        {
+            Lc->next = p;
+            p = p->next;
+        }else if(p->data > q->data)
+        {
+            Lc->next = q;
+            q = q->next;
+        }else {
+            Lc->next = p;
+            p = p->next;
+            //delete(q);
+            q = q->next;
+        }
+        Lc = Lc->next;
+    }
+    Lc->next = p?p:q;
+    free(T); 
+    return L;
+}
+
+int main()
+{
+    Linklist L1 = CreateHead();
+    Linklist L2 = CreateHead();
+    printf("请输入链表一的内容：");
+    InsertNode(L1);
+    printf("请输入链表二的内容：");
+    InsertNode(L2);
+    Linklist L3 = line_max(L1,L2);
+    Print(L3);
+
+    return 0;
+}
