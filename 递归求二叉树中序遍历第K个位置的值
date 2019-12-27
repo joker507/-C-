@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define Qsize 50
+
+//二叉链表结构体的定义
+typedef struct node
+{
+    int data;//数据域
+    struct node *lchild, *rchild;
+
+}TreeNode, *Tree;
+
+int count = 0;
+int Inorder(Tree B, int k)//我要返回中序遍历第k个位置的值，按照中序遍历寻找第k个位置
+{
+    int visit = -1;
+    if(!B)return -1;
+    else {
+
+        if((visit = Inorder(B->lchild,k)) != -1)//中序遍历第一次到左边叶子节点也就是中序遍历的第一个位置。
+        {
+            return visit;                                    
+        }else if((++count) == k){//遍历第一个节点。如果是要找的话就返回//如果没有找到继续往右孩子寻找
+        
+            return B->data;                                 
+        }else if((visit = Inorder(B->rchild,k)) != -1 ){    //往右孩子寻找
+            return visit;                                   
+        }else{
+        
+         return -1;//当有没有找时返回-1
+        }
+    }
+}
+
+//遍历
+
+void MiTravel(Tree bt)//中序遍历
+{
+    if(bt != NULL)
+    {
+        MiTravel(bt->lchild);
+        printf("%d\t",bt->data);
+        MiTravel(bt->rchild);
+    }
+}
+
+TreeNode * newNode(int data)//新结点
+{
+    TreeNode *Node =(TreeNode *)malloc(sizeof(TreeNode));
+    Node->data = data;
+    Node->lchild = NULL;
+    Node->rchild = NULL;
+    return Node;
+}
+
+void CreateTree(Tree *T)//从按照根左边右边if输入-1表示空
+{
+    int data;
+    TreeNode *Node;
+    scanf("%d",&data);
+    if(data != -1)
+    {
+        Node = newNode(data);//创造新结点
+        *T = Node;
+        printf("左孩子：");
+        CreateTree(&(*T)->lchild);//创建左孩子
+        printf("右孩子：");
+        CreateTree(&(*T)->rchild);//右孩子
+    }
+}
+
+int main()//检验
+{
+    Tree B;
+    CreateTree(&B);
+    MiTravel(B);
+    int k;
+    do{
+        printf("enter k:");
+        scanf("%d",&k);
+        printf("第%d个位置中序遍历的值为：%d\n",k,Inorder(B,k));
+        count = 0;
+    }while(1);
+    system("pause");
+}
